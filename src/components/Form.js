@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { postBook } from '../redux/actions';
+import { postBook, updateBook } from '../redux/actions';
 
-export const Form = ({ editFormVisibility, cancelUpdate }) => {
+export const Form = ({ editFormVisibility, bookToBeEdited}) => {
   const dispatch = useDispatch();
-  
+
+
+// adding items state
   const [itemNo, setItemNo] = useState('');
   const [item, setItem] = useState('');
   const [brand, setBrand] = useState('');
 
+
+// list to be edited state 
   const [editItemNo, setEditItemNo] = useState('');
   const [editItem, setEditItem] = useState('');
   const [editBrand, setEditBrand] = useState('');
 
+  useEffect(()=>{
+    setEditItemNo(bookToBeEdited.itemNo);
+    setEditItem(bookToBeEdited.item);
+    setEditBrand(bookToBeEdited.brand);
+  }, [bookToBeEdited])
+
+  //
   const handleSubmit = (e) => {
     e.preventDefault();
     let book = {
@@ -26,18 +37,29 @@ export const Form = ({ editFormVisibility, cancelUpdate }) => {
     setItem('');
   };
 
+
+
   const handleEditSubmit = (e) => {
     e.preventDefault();
-    let book = {
+  
+    console.log({previousItemNo:bookToBeEdited,
       itemNo: editItemNo,
-      item: editItem,
-      brand: editBrand
+      brand: editBrand,
+      item: editItem})
+
+      ;let editedBook = {
+      previousItemNo:bookToBeEdited.itemNo,
+      itemNo: editItemNo,
+      brand: editBrand,
+      item: editItem
     };
-    dispatch(postBook(book));
+    dispatch(updateBook(editedBook));
     setEditItemNo('');
     setEditBrand('');
     setEditItem('');
-  };
+
+  }
+  
 
   return (
     <React.Fragment>
@@ -88,7 +110,7 @@ export const Form = ({ editFormVisibility, cancelUpdate }) => {
         <form className='form-group container' onSubmit={handleEditSubmit}>
           <div className='row'>
             <div className='col-3'>
-              <label>ISBN No.</label>
+              <label>iTEM NO.</label>
               <input
                 type='text'
                 className='form-control'
@@ -99,7 +121,7 @@ export const Form = ({ editFormVisibility, cancelUpdate }) => {
             </div>
 
             <div className='col-3'>
-              <label>Author</label>
+              <label>ITEM</label>
               <input
                 type='text'
                 className='form-control'
@@ -110,13 +132,13 @@ export const Form = ({ editFormVisibility, cancelUpdate }) => {
             </div>
 
             <div className='col-3'>
-              <label>Title</label>
+              <label>BRAND</label>
               <input
                 type='text'
                 className='form-control'
                 required
                 onChange={(e) => setEditBrand(e.target.value)}
-                value={editBrand}
+                value={editBrand ||''}
               />
             </div>
 

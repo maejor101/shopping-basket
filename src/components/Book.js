@@ -11,13 +11,13 @@ export const Book = ({ books , editFormVisibility, handleEdit}) => {
         <div className='book' key={book.itemNo}>
             <div className='content'>
                 <span>#{book.itemNo}</span>
-                <h4>{book.item} by {book.brand}</h4>
+                <h4>{book.item} : {book.brand}</h4>
             </div>
 
             <div className='actions'>
                 {editFormVisibility === false && (
                     <>
-                        <span className='edit' onClick={()=>handleEdit()}>
+                        <span className='edit' onClick={()=>handleEdit(book)}>
                             <Icon icon={edit2} size={24} />
                         </span>
                         <span className='trash' onClick={() => dispatch(deleteBook(book.itemNo))}>
